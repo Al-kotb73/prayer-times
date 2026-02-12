@@ -1,0 +1,395 @@
+:root {
+    /* 🌑 Backgrounds */
+    --bg-main: #0f1318;
+    --bg-section: #141a20;
+    --bg-card: #1b222a;
+    --bg-card-hover: #202a33;
+
+    /* ✨ Primary Accent (Gold) */
+    --accent-gold: #e0d3a6;
+    --accent-gold-soft: rgb(230, 213, 143);
+
+    /* 💠 Secondary Accent (Teal / Active) */
+    --accent-teal: #5eead4;
+    --accent-teal-glow: rgba(94, 234, 212, 0.4);
+
+    /* 📝 Text Colors */
+    --text-main: #ffffff;
+    --text-muted: #b0b7c3;
+    --text-dim: #8a93a3;
+
+    /* 🕒 Countdown Boxes */
+    --countdown-bg: #1a2129;
+    --countdown-text: #ffffff;
+
+    /* 🕌 Active Prayer Card */
+    --active-border: #5eead4;
+    --active-bg: #18262a;
+
+    /* 🔘 Buttons */
+    --btn-primary-bg: #5eead4;
+    --btn-primary-text: #0f1318;
+    --btn-secondary-bg: transparent;
+    --btn-secondary-border: #2a343f;
+
+    /* 🌫 Shadows */
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+}
+p {
+    margin-bottom: 0;
+}
+h1,
+h3,
+h4 {
+    margin-bottom: 0;
+}
+
+body {
+    position: relative;
+    font-family: "Roboto", sans-serif;
+    background: var(--bg-main);
+    background-attachment: fixed;
+}
+
+.location-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.popup-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 360px;
+    text-align: center;
+}
+
+.popup-box h3 {
+    margin-bottom: 10px;
+}
+
+.popup-box p {
+    font-size: 14px;
+    color: #555;
+}
+
+.popup-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.popup-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.popup-actions .allow {
+    background: #1e7f5c;
+    color: #fff;
+}
+
+.popup-actions .deny {
+    background: #ddd;
+}
+
+.prayer-times {
+    .main-nav {
+        padding: 12px 16px;
+        background: #0f1216;
+        color: #fff;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    /* LOGO */
+    .logo-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo-box h3 {
+        font-size: 18px;
+        margin: 0;
+    }
+
+    /* SEARCH */
+    .search-box {
+        flex: 1;
+    }
+
+    .search-location {
+        display: flex;
+        background: #1a1f25;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .search-location input {
+        outline: none;
+
+        flex: 1;
+        background: transparent;
+        border: none;
+        padding: 10px 12px;
+        color: #fff;
+    }
+
+    .search-location input::placeholder {
+        color: #aaa;
+    }
+
+    .search-location button {
+        background: var(--accent-gold);
+        border: none;
+        padding: 0 16px;
+        font-weight: bold;
+    }
+
+    /* LOCATION */
+    .location-box {
+        text-align: center;
+        font-size: 13px;
+        color: #ccc;
+    }
+
+    .location-name {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        justify-content: center;
+        margin: 0;
+    }
+
+    /* ---------- MOBILE ---------- */
+    .mobile-nav {
+        background: #0f1216;
+        color: #fff;
+        padding: 12px 16px;
+    }
+
+    /* TOP ROW */
+    .nav-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .logo-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+    }
+
+    .logo-box h3 {
+        font-size: 16px;
+        margin: 0;
+    }
+
+    /* SEARCH */
+    .search-box {
+        flex: 1;
+    }
+
+    .search-box input {
+        width: 100%;
+        background: #1a1f25;
+        border: none;
+        border-radius: 10px;
+        padding: 8px 12px;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .search-box input::placeholder {
+        color: #888;
+    }
+
+    /* BOTTOM ROW */
+    .nav-bottom {
+        padding-top: 10px;
+        text-align: center;
+    }
+
+    .location-name {
+        font-size: 14px;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .meta-date {
+        font-size: 12px;
+        color: #aaa;
+        margin: 2px 0 0;
+    }
+
+    @media (max-width: 768px) {
+        nav {
+            flex-direction: column;
+            gap: 1em;
+        }
+    }
+    @media (max-width: 576px) {
+        nav {
+            flex-direction: column;
+            h3 {
+                font-size: 1.25em;
+            }
+            .location-name {
+                font-size: 1.2em;
+            }
+        }
+    }
+
+    .next-prayer {
+        h4 {
+            color: var(--accent-gold);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        #next-prayer-name {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            h3 {
+                font-size: 3.75em;
+                font-weight: 700;
+            }
+        }
+        #countdown {
+            display: flex;
+            margin-top: 2em;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            p {
+                font-size: 3rem;
+                font-weight: 700;
+            }
+            .box-countdown {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                background: var(--countdown-bg);
+                color: var(--countdown-text);
+
+                padding: 1.875em 2.125em;
+                border-radius: 12px;
+                box-shadow: var(--shadow-soft);
+                h1 {
+                    font-size: 3.75em;
+                    font-weight: 700;
+                }
+                p {
+                    font-size: 0.9em;
+                    text-transform: uppercase;
+                }
+            }
+        }
+        @media (max-width: 768px) {
+            #countdown {
+                gap: 5px !important;
+                .box-countdown {
+                    padding: 1.25em 1.5em !important;
+                    p{
+                        font-size: 0.70rem !important;
+                    }
+                }
+                p {
+                    font-size: 1.5rem !important;
+                    font-weight: 700;
+                }
+                h1 {
+                    font-size: 1.875em !important;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+    .prayer-times-content {
+        .item {
+            text-align: center;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            justify-content: center;
+            background: var(--bg-section);
+            box-shadow: var(--shadow-soft);
+            border-radius: 12px;
+            padding: 2em 3.25em;
+            .prayer-title {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                h5 {
+                    font-size: 1.5rem;
+                    font-weight: 500;
+                }
+                svg {
+                    color: var(--text-main);
+                }
+                h3 {
+                    font-size: 1.5em;
+                    font-weight: 700;
+                    color: var(--accent-gold);
+                }
+            }
+        }
+    }
+    .item.active {
+        border: 2px solid var(--accent-gold);
+        transition: all 0.3s ease;
+    }
+
+    .item.active h5,
+    .item.active h3 {
+        font-weight: bold;
+    }
+}
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+    background: var(--bg-main);
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+}
+
+.suggestions-list li {
+    color: var(--text-main);
+
+    padding: 10px;
+    cursor: pointer;
+}
+
+.suggestions-list li:hover {
+    background: var(--bg-section);
+}
