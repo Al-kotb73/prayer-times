@@ -30,27 +30,22 @@ function getPrayerTimesByUserLocation() {
     });
 }
 
-function getPrayerTimesByCityName() {
-    const cityInput = document.querySelector(".search-location input").value;
-    console.log(cityInput);
-    const url = `https://nominatim.openstreetmap.org/search?q=${cityInput}&format=json&limit=1&accept-language=en`;
-    axios
-        .get(url)
-        .then((response) => {
-            const location = response.data[0];
-            console.log(location);
-            return (coordinates = {
-                lat: location.lat,
-                lon: location.lon,
-            });
-        })
-        .then((coordinates) => {
-            handleCoordinates(coordinates);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-    cityInput.value = "";
+async function getPrayerTimesByCityName() {
+    try {
+        const Input = document.querySelector(".search-location input");
+        const cityInput = Input.value;
+        const url = `https://nominatim.openstreetmap.org/search?q=${cityInput}&format=json&limit=1&accept-language=en`;
+        const response = await axios.get(url);
+        const locations = response.data[0];
+        const coordinates = {
+            lat: locations.lat,
+            lon: locations.lon,
+        };
+        handleCoordinates(coordinates);
+        Input.value = "";
+    } catch (error) {
+        console.log(error);
+    }
 }
 async function suggesCities() {
     const cityInput = document.querySelector(".search-location input");
@@ -90,30 +85,20 @@ async function handleCoordinates(coordinates) {
     await getLocation(coordinates.lat, coordinates.lon);
 }
 async function getPrayerTimes(latitude, longitude) {
-    await axios
-        .get(`https://api.aladhan.com/v1/timings`, {
-            params: {
-                latitude: latitude,
-                longitude: longitude,
-                method: 5,
-            },
-        })
-        .then(function (response) {
-            let data = response.data.data;
-            console.log(data);
-            return data;
-        })
-        .then(function (data) {
-            // handle success
-            console.log(data);
-            renderPrayerTimes(data);
-        })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
-        });
+    const url = `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=5`;
+    try {
+        const response = await axios.get(url);
+        const data = response.data.data;
+        renderPrayerTimes(data);
+    } catch (error) {
+        console.log(error);
+    }
 }
 function startNextPrayerCountdown(timings) {
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+
     const prayerOrder = [
         { name: "Fajr", time: timings.Fajr },
         { name: "Dhuhr", time: timings.Dhuhr },
@@ -149,7 +134,7 @@ function startNextPrayerCountdown(timings) {
     let nextPrayerNameElem = document.getElementById("next-prayer-name");
     nextPrayerNameElem.innerHTML = `
     <h3>${nextPrayer.name}</h3>
-    <p>Start at ${nextPrayer.time} ${nextPrayer.date.getHours() >= 12 ? "PM" : "AM"}  </p>
+<p>Start at ${formatTimeTo12Hour(nextPrayer.time)}</p>
     `;
     countdownInterval = setInterval(() => {
         const now = new Date();
@@ -182,6 +167,15 @@ function startNextPrayerCountdown(timings) {
 
         setActivePrayer(nextPrayer.name);
     }, 1000);
+}
+function formatTimeTo12Hour(time) {
+    let [hours, minutes] = time.split(":");
+    hours = parseInt(hours);
+
+    const period = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    return `${hours}:${minutes} ${period}`;
 }
 
 // render prayer times on page load
@@ -296,7 +290,7 @@ async function renderPrayerTimes(data) {
                         <h5>Isha</h5>
                     </div>
 
-                    <h3 id="fajr-time">${data.timings.Isha} PM </h3>
+                    <h3 id="fajr-time">${formatTimeTo12Hour(data.timings.Isha)}  </h3>
                 </div>
                 <div class="item  " data-prayer="Maghrib">
                     <div class="prayer-title  ">
@@ -315,7 +309,7 @@ async function renderPrayerTimes(data) {
                         <h5>Maghrib</h5>
                     </div>
 
-                    <h3 id="fajr-time">${data.timings.Maghrib} PM</h3>
+                    <h3 id="fajr-time">${formatTimeTo12Hour(data.timings.Maghrib)} </h3>
                 </div>
                 <div class="item  " data-prayer="Asr">
                     <div class="prayer-title  ">
@@ -331,7 +325,7 @@ async function renderPrayerTimes(data) {
                         <h5>Asr</h5>
                     </div>
 
-                    <h3 id="fajr-time">${data.timings.Asr} PM</h3>
+                    <h3 id="fajr-time">${formatTimeTo12Hour(data.timings.Asr)} </h3>
                 </div>
                 <div class="item  " data-prayer="Dhuhr">
                     <div class="prayer-title ">
@@ -344,7 +338,7 @@ async function renderPrayerTimes(data) {
                         <h5>Dhuhr</h5>
                     </div>
 
-                    <h3 id="fajr-time">${data.timings.Dhuhr} PM</h3>
+                    <h3 id="fajr-time">${formatTimeTo12Hour(data.timings.Dhuhr)}</h3>
                 </div>
                 <div class="item d-flex   " data-prayer="Fajr">
                     <div class="prayer-title ">
@@ -357,7 +351,7 @@ async function renderPrayerTimes(data) {
                         <h5>Fajr</h5>
                     </div>
 
-                    <h3 id="fajr-time">${data.timings.Fajr} AM</h3>
+                    <h3 id="fajr-time">${formatTimeTo12Hour(data.timings.Fajr)} </h3>
                 </div>
             </div>
         </div>
@@ -388,12 +382,12 @@ async function getLocation(latitude, longitude) {
     console.log(address);
     const city = address.city || address.town || address.village || address.county || address.state;
     const country = address.country;
-    let prayerTimesContent = document.querySelector(".location-name");
-    prayerTimesContent.innerHTML = `                     <svg stroke="currentColor" fill="#e0d3a6" stroke-width="0" viewBox="0 0 512 512" height="25px"
+    let prayerTimesContent = document.querySelectorAll(".location-name");
+    prayerTimesContent.forEach((item) => item.innerHTML = `                     <svg stroke="currentColor" fill="#e0d3a6" stroke-width="0" viewBox="0 0 512 512" height="25px"
                         width="25px" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="256" cy="192" r="32"></circle>
                         <path
                             d="M256 32c-88.22 0-160 68.65-160 153 0 40.17 18.31 93.59 54.42 158.78 29 52.34 62.55 99.67 80 123.22a31.75 31.75 0 0 0 51.22 0c17.42-23.55 51-70.88 80-123.22C397.69 278.61 416 225.19 416 185c0-84.35-71.78-153-160-153zm0 224a64 64 0 1 1 64-64 64.07 64.07 0 0 1-64 64z">
                         </path>
-                    </svg> ${city}, ${country}`;
+                    </svg> ${city}, ${country}`);
 }
